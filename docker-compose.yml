@@ -1,0 +1,15 @@
+version: '2'
+services:
+  assets-service:
+    container_name: assets-service
+    build:
+      context: .
+    image: assets-service-image:latest
+    ports:
+      - 8080:8080
+    networks:
+      - spring-cloud-network
+
+networks:
+  spring-cloud-network:
+    driver: bridge

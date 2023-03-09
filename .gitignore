@@ -1,6 +1,7 @@
 # Custom project
 .gradle/**
 .idea/**
+build/**
 # Compiled class file
 *.class
 
