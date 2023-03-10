@@ -1,15 +1,44 @@
-version: '2'
+version: '3.7'
 services:
   assets-service:
     container_name: assets-service
+    depends_on:
+      - postgres
     build:
       context: .
     image: assets-service-image:latest
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=postgres
     ports:
-      - 8080:8080
+      - '8080:8080'
     networks:
       - spring-cloud-network
-
+  postgres:
+    container_name: postgres
+    image: postgres:10.5
+    restart: always
+    expose:
+      - "5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    ports:
+      - '5432:5432'
+    volumes:
+      # copy the sql script to create and fill tables
+      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./sql/fill_tables.sql:/docker-entrypoint-initdb.d/fill_tables.sql
+    networks:
+      - spring-cloud-network
 networks:
   spring-cloud-network:
     driver: bridge

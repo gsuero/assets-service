@@ -2,17 +2,16 @@ package com.collibra.gsuero.assets.model;
 
 import jakarta.persistence.*;
 
-import java.time.Instant;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Table(name = "assets")
 public class Asset {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
-    private Instant timestamp;
     private boolean promoted = false;
 
     @OneToMany(mappedBy = "parent")
@@ -35,14 +34,6 @@ public class Asset {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Instant getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
     }
 
     public boolean isPromoted() {

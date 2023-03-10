@@ -2,6 +2,7 @@
 .gradle/**
 .idea/**
 build/**
+postgres-data/**
 # Compiled class file
 *.class
 
