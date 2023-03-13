@@ -4,14 +4,19 @@ services:
     container_name: assets-service
     depends_on:
       - postgres
+      - rabbitmq
     build:
       context: .
     image: assets-service-image:latest
     environment:
+      - spring_profiles_active=local
       - DATABASE_HOST=postgres
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
       - DATABASE_NAME=postgres
+      - RABBITMQ_USER=john123
+      - RABBITMQ_PASSWORD=123456
+      - RABBITMQ_HOST=rabbitmq
     ports:
       - '8080:8080'
     networks:
@@ -35,8 +40,19 @@ services:
       - '5432:5432'
     volumes:
       # copy the sql script to create and fill tables
-      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
-      - ./sql/fill_tables.sql:/docker-entrypoint-initdb.d/fill_tables.sql
+      - ./local/sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./local/sql/fill_tables.sql:/docker-entrypoint-initdb.d/fill_tables.sql
+    networks:
+      - spring-cloud-network
+  rabbitmq:
+    image: "rabbitmq:3.9-alpine"
+    ports:
+      - '5672:5672'
+      - "15672:15672"
+    volumes:
+      - ./local/rabbitmq/rabbitmq-enabled-plugins:/etc/rabbitmq/enabled_plugins
+      - ./local/rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config
+      - ./local/rabbitmq/rabbitmq-defs.json:/etc/rabbitmq/rabbitmq-defs.json
     networks:
       - spring-cloud-network
 networks:

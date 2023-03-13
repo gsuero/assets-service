@@ -1,2 +1,44 @@
 # assets-service
- 
+
+A RESTful microservice with endpoints that allows you to manage assets and perform promotion of those assets
+
+## Tech
+- `Docker` (and `docker-compose`)
+- Java 17
+- `Springboot 3` as microservice framework
+- `rabbitmq` for event broadcasting
+- `postgresql` for persistency
+
+## Local start up
+This is a dockerized microservice that can be bootstrapped locally with the help of `docker-compose`
+
+Steps:
+1. `./gradlew build`
+2. `docker-compose build`
+3. `docker-compose up -d`
+
+## Rest endpoints:
+### Create a new asset:
+```curl
+curl --location 'http://localhost:8080/asset' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Asset E",
+    ["parent": 4]
+
+}'
+```
+### Fetch an asset:
+```curl
+curl --location 'http://localhost:8080/asset/2'
+```
+
+### Deletes an asset:
+```curl
+curl --location --request DELETE 'http://localhost:8080/asset/2'
+```
+
+### Promotes an asset, its children and its ancestors:
+```curl
+curl --location --request PUT 'http://localhost:8080/asset/4/promote'
+```

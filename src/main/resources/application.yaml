@@ -15,4 +15,31 @@ spring:
                 implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
         properties:
             hibernate:
-                format_sql=true
+                format_sql: true
+                default_schema: '"public"'
+    rabbitmq:
+        host: ${RABBITMQ_HOST}
+        port: 5672
+        username: ${RABBITMQ_USER}
+        password: ${RABBITMQ_PASSWORD}
+        virtual-host: demo-vhost
+
+
+events:
+    queue:
+        assets-operations: assets.operations
+
+springdoc:
+    api-docs:
+        enabled: true
+        path: /api-docs
+---
+spring:
+    config:
+        activate:
+            on-profile: local
+
+logging:
+    level:
+        com.collibra.gsuero: DEBUG
+        org.hibernate: ERROR

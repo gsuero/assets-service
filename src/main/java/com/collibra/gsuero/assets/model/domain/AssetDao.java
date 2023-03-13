@@ -1,17 +1,26 @@
-package com.collibra.gsuero.assets.model;
+package com.collibra.gsuero.assets.model.domain;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
+import jdk.jfr.Category;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
-public class Asset {
 
+@Entity
+@Table(name = "assets", schema = "public")
+public class AssetDao {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @NotBlank
-    @Size(max = 255)
     private String name;
-    private Long parent;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private AssetDao parent;
+
+    @OneToMany(mappedBy = "parent")
+    private Set<AssetDao> assets = new HashSet<>();
 
     private boolean promoted = false;
 
@@ -31,12 +40,20 @@ public class Asset {
         this.name = name;
     }
 
-    public Long getParent() {
+    public AssetDao getParent() {
         return parent;
     }
 
-    public void setParent(Long parent) {
+    public void setParent(AssetDao parent) {
         this.parent = parent;
+    }
+
+    public Set<AssetDao> getAssets() {
+        return assets;
+    }
+
+    public void setAssets(Set<AssetDao> assets) {
+        this.assets = assets;
     }
 
     public boolean isPromoted() {
@@ -51,7 +68,7 @@ public class Asset {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Asset asset = (Asset) o;
+        AssetDao asset = (AssetDao) o;
         return id == asset.id;
     }
 

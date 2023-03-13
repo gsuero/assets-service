@@ -1,47 +1,88 @@
 package com.collibra.gsuero.assets.controller;
 
-import com.collibra.gsuero.assets.error.NotFoundException;
 import com.collibra.gsuero.assets.model.Asset;
-import com.collibra.gsuero.assets.repository.AssetRepository;
+import com.collibra.gsuero.assets.service.AssetService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/asset")
 public class AssetController {
-    private static final Logger LOG = LoggerFactory.getLogger(AssetController.class);
+    private AssetService assetService;
 
-    private AssetRepository repository;
-
+    @Operation(summary = "Get a Asset by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the Asset",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Asset.class)) }),
+            @ApiResponse(responseCode = "404", description = "Asset not found",
+                    content = @Content) })
     @GetMapping("/{id}")
-    public Asset getAsset(@PathVariable long id) {
-        Optional<Asset> assetOptional = repository.findById(id);
-
-        if (assetOptional.isPresent()) {
-            return assetOptional.get();
-        }
-        LOG.error("Asset with id {} was not present in data store", id);
-        throw new NotFoundException();
+    @ResponseStatus(HttpStatus.OK)
+    public Asset getAsset(@PathVariable @NotNull long id) {
+        return assetService.getById(id);
     }
 
-    @GetMapping
-    public Page<Asset> getAssets(@NotNull final Pageable pageable) {
-        return repository.findAll(pageable);
+    @Operation(summary = "Create an Asset")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Created an Asset",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Asset.class)) })
+    })
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Asset create(@RequestBody final Asset asset) {
+        return assetService.create(asset);
     }
 
+    @Operation(summary = "Updates an Asset")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updated an Asset",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Asset.class)) }),
+            @ApiResponse(responseCode = "404", description = "Asset not found",
+                    content = @Content) })
+    @PostMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Asset update(@PathVariable @NotNull long id, @RequestBody final Asset asset) {
+        return assetService.update(id, asset);
+    }
+
+    @Operation(summary = "Deletes an Asset")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Deleted an Asset",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Asset.class)) }),
+            @ApiResponse(responseCode = "404", description = "Asset not found",
+                    content = @Content) })
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable @NotNull Long id) {
+        assetService.delete(id);
+    }
+
+    @Operation(summary = "Promotes an Asset, and every other asset related to provided id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Promoted the Asset",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Asset.class)) }),
+            @ApiResponse(responseCode = "404", description = "Asset not found",
+                    content = @Content) })
+    @PutMapping("/{id}/promote")
+    @ResponseStatus(HttpStatus.OK)
+    public void promote(@PathVariable Long id) {
+        assetService.promote(id);
+    }
 
     @Autowired
-    public void setRepository(AssetRepository repository) {
-        this.repository = repository;
+    public void setAssetService(AssetService assetService) {
+        this.assetService = assetService;
     }
 }

@@ -13,3 +13,5 @@ INSERT INTO assets (id, name, parent, promoted) VALUES (3, 'Asset C',  1, false)
 INSERT INTO assets (id, name, parent, promoted) VALUES (10, 'Asset J',  3, false);
 INSERT INTO assets (id, name, parent, promoted) VALUES (11, 'Asset K',  10, false);
 INSERT INTO assets (id, name, parent, promoted) VALUES (12, 'Asset L',  10, false);
+
+commit;
