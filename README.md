@@ -18,7 +18,11 @@ Steps:
 3. `docker-compose up -d`
 
 ## Rest endpoints:
-### Create a new asset:
+Swagger documentation can be found at: http://127.0.0.1:8080/swagger-ui/index.html#/
+It follows openapi 3.0 standard: http://127.0.0.1:8080/api-docs
+
+
+- ### Create a new asset:
 ```curl
 curl --location 'http://localhost:8080/asset' \
 --header 'Content-Type: application/json' \
@@ -28,17 +32,25 @@ curl --location 'http://localhost:8080/asset' \
 
 }'
 ```
-### Fetch an asset:
+- ### Fetch an asset:
 ```curl
 curl --location 'http://localhost:8080/asset/2'
 ```
+- ### Updates an asset
+```curl
+curl --location --request PUT 'http://localhost:8080/asset/1' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Asset A or B"
+}'
+```
 
-### Deletes an asset:
+- ### Deletes an asset:
 ```curl
 curl --location --request DELETE 'http://localhost:8080/asset/2'
 ```
 
-### Promotes an asset, its children and its ancestors:
+- ### Promotes an asset, its children and its ancestors:
 ```curl
 curl --location --request PUT 'http://localhost:8080/asset/4/promote'
 ```

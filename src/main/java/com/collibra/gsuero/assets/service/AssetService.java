@@ -50,8 +50,13 @@ public class AssetService {
     }
 
     public Asset update(long id, Asset asset) {
+        Asset fetched = getById(id);
+
+        fetched.setName(asset.getName());
+        fetched.setPromoted(asset.isPromoted());
+
         LOG.debug("About to update Asset with id : {}", id);
-        Asset updatedAsset = convert(repository.save(convert(asset)));
+        Asset updatedAsset = convert(repository.save(convert(fetched)));
         LOG.debug("Updated asset for name {} with id {}", asset.getName(), updatedAsset.getId());
         return updatedAsset;
     }

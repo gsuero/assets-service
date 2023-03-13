@@ -49,7 +49,7 @@ public class AssetController {
                             schema = @Schema(implementation = Asset.class)) }),
             @ApiResponse(responseCode = "404", description = "Asset not found",
                     content = @Content) })
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Asset update(@PathVariable @NotNull long id, @RequestBody final Asset asset) {
         return assetService.update(id, asset);

@@ -44,6 +44,8 @@ public class AssetControllerTest {
         clearInvocations(this.assetService);
     }
 
+    // TODO: Validate annotations are present at class level
+
     @Test
     void testGetAsset() {
         Asset asset = controller.getAsset(1L);

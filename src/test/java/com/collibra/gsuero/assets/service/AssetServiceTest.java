@@ -66,6 +66,22 @@ public class AssetServiceTest {
     }
 
     @Test
+    void testUpdate() {
+        Asset update = new Asset();
+        update.setName("new-name");
+        Asset asset = assetService.update(1L, update);
+
+        verify(repository, times(1)).findById(eq(1L));
+
+        ArgumentCaptor<AssetDao> assetCaptor = ArgumentCaptor.forClass(AssetDao.class);
+
+        verify(repository, times(1)).save(assetCaptor.capture());
+
+        assertEquals("new-name", assetCaptor.getValue().getName());
+    }
+
+
+    @Test
     void testCreate() {
         Asset asset = assetService.create(buildAsset(2L, "saved-asset"));
         assertEquals("saved-asset", asset.getName());
