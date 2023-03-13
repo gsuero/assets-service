@@ -54,3 +54,11 @@ curl --location --request DELETE 'http://localhost:8080/asset/2'
 ```curl
 curl --location --request PUT 'http://localhost:8080/asset/4/promote'
 ```
+
+
+# To be improved:
+- `fill_tables.sql` is not working correctly, needs to be investigated.
+- Test coverage to models and other classes.
+- Integration tests
+- Table constraints
+- Better exception handler with ControllerAdvice?
